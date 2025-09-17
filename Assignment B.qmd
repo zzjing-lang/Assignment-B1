@@ -182,16 +182,14 @@ mat_2.4
 ```{r}
 #2.5a
 n5 <- 5
-mat_2.5a <- outer(0:(n5-1), 0:(n5-1), FUN = function(i,j) (i+j) %% n5)
+mat_2.5a <- outer(0:(n5-1), 0:(n5-1), FUN = function(i,j) (i+j) %% 5)
 #2.5b
-n10 <- 10; row_num <- 10
-mat_2.5b <- outer(0:(row_num-1), 0:(n10-1), FUN = function(i,j) (i+j) %% n10)
+n <- 10
+mat_2.5b <- outer(0:9, 0:9, \(i,j) (i+j) %% 9)
 #2.5c
-n9 <- 9
-mat_2.5c <- outer(0:(n9-1), 0:(n9-1), FUN = function(i,j) {
-  diff <- abs(i - j)
-  ifelse(diff == 0, 0, n9 - diff)
-})
+n <- 9
+mat_2.5c <- outer(0:(n-1), 0:(n-1), function(i, j) (i - j) %% 9)
+
 
 mat_2.5a
 mat_2.5b
@@ -200,40 +198,17 @@ mat_2.5c
 
 ###2.6. 
 ```{r}
-n <- 5
-A <- matrix(0, nrow = n, ncol = n)
-for (i in 1:n) {
-  for (j in 1:n) {
-    A[i, j] <- min(i, j)
-  }
-}
-y <- c(7, -1, -3, 5, 17)
-x_sol <- solve(A, y)
-cat("A:\n")
-print(A)
-cat("x:\n")
-print(x_sol)
+library(Matrix)
+A <- toeplitz(1:5)
+b <- c(7, -1, -3, 5, 17)
+x <- solve(A, b)
 
+A
+x
 ```
 
-###2.7. ____??
-```{r}
-set.seed(75)
-aMat <- matrix(sample(10, 60, replace = TRUE), nrow = 6)
-col_sums <- colSums(aMat)
-col_pairs <- expand.grid(col1 = 1:10, col2 = 1:10)
-col_pairs_gt75 <- col_pairs[col_sums[col_pairs$col1] + col_sums[col_pairs$col2] > 75, ]
-row_gt4 <- rowSums(aMat > 4)
 
-row_two7 <- which(rowSums(aMat == 7) == 2)
-col_pairs_no_dup <- col_pairs_gt75[col_pairs_gt75$col1 < col_pairs_gt75$col2, ]
-
-row_gt4
-row_two7
-col_pairs_no_dup
-```
-
-###2.8___xx
+###2.8
 ```{r}
 #2.8a
 sum_8a <- sum(outer(1:20, 1:5, FUN = function(i,j) i^4/(3+j)))
@@ -396,31 +371,6 @@ testLoop <- function(n) {
 print(testLoop(5))
 ```
 
-###3.9____**
-```{r}
-quadmap <- function(start, rho, niter) {
-  x <- numeric(niter)
-  x[1] <- start
-  for (i in 2:niter) x[i] <- rho * x[i-1] * (1 - x[i-1])
-  x
-}
-
-tmp <- quadmap(0.95, 2.99, 500)
-
-count_iter <- function(start, rho) {
-  x_prev <- start
-  iter <- 1
-  repeat {
-    x_current <- rho * x_prev * (1 - x_prev)
-    iter <- iter + 1
-    if (abs(x_current - x_prev) < 0.02) break
-    x_prev <- x_current
-  }
-  iter
-}
-
-result <- count_iter(0.95, 2.99)
-```
 
 ###3.10
 ```{r}
