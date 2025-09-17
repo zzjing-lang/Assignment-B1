@@ -241,7 +241,7 @@ tmpFn3 <- function(x, n) {
 }
 ```
 
-###3.2 ____??
+###3.2 
 ```{r}
 tmpFn <- function(xVec) {
   n <- length(xVec)
@@ -329,7 +329,7 @@ print(quadrant(300))
 print(quadrant(370))
 ```
 
-###3.7______???
+###3.7
 ```{r}
 weekday <- function(day, month, year) {
   if (month < 3) {
@@ -404,7 +404,7 @@ print(result_general)
 ```
 
 ###Exercise 4
-###4.1____??
+###4.1
 ```{r}
 #4.1a
 zvec_outer <- function(xVec, yVec) {
@@ -451,23 +451,23 @@ time_vapply <- system.time(zvec_vapply(x, y))
 print(time_vapply)
 ```
 
-###4.2____**
+###4.2
 ```{r}
+
 #4.2a
-extract_cols_no_na <- function(mat) {
-  cols_no_na <- apply(mat, 2, function(col) all(!is.na(col)))
-  submat <- mat[, cols_no_na]
-  return(submat)
-}
+getColsNoNA <- function(mat) mat[, colSums(is.na(mat)) == 0]
 
 #4.2b
-remove_rows_cols_with_na <- function(mat) {
-  rows_no_na <- apply(mat, 1, function(row) all(!is.na(row)))
-  mat_rows_removed <- mat[rows_no_na, ]
-  cols_no_na <- apply(mat_rows_removed, 2, function(col) all(!is.na(col)))
-  submat <- mat_rows_removed[, cols_no_na]
-  return(submat)
+getSubmatrixNoNA <- function(mat) {
+  r <- rowSums(is.na(mat)) == 0
+  c <- colSums(is.na(mat)) == 0
+  mat[r, c, drop = FALSE]
 }
+
+matA <- matrix(c(1, NA, 3, 4, 5, 6, NA, 8, 9), 3)
+getColsNoNA(matA)
+getSubmatrixNoNA(matA)
+
 ```
 
 ###4.3
@@ -650,19 +650,21 @@ mean_x_selected <- sapply(selected_lists, function(sublist) {
 ###5.3
 ```{r}
 #5.3a
-numerator_a <- sapply(myList, function(lst) sum(lst$xVec * 1:10))
-denominator_a <- sapply(myList, function(lst) sum(lst$yVec * 1:10))
-ratio_a <- numerator_a / denominator_a
+coeff <- 1:10
+vec_5.3a <- sapply(myList, function(lst) sum(lst$x * coeff) / sum(lst$y * coeff))
 
 #5.3b
-matrix_b <- sapply(1:10, function(j) {
-  sapply(myList, function(lst) lst$xVec[j] - lst$yVec[j])
-})
+mat_5.3b <- sapply(1:10, function(j) sapply(myList, function(lst) lst$x[j] - lst$y[j]))
 
 #5.3c
-numerator_c <- sum(sapply(1:1000, function(i) i * myList[[i]]$xVec[2]))
-denominator_c <- sum(sapply(1:1000, function(i) i * myList[[i]]$yVec[2]))
-ratio_c <- numerator_c / denominator_c
+numerator <- sum(sapply(1:1000, function(i) i * myList[[i]]$x[2]))
+denominator <- sum(sapply(1:1000, function(i) i * myList[[i]]$y[2]))
+val_5.3c <- numerator / denominator
+
+
+vec_5.3a
+mat_5.3b
+val_5.3c
 ```
 
 ###5.4
